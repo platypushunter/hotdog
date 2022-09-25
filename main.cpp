@@ -11,49 +11,54 @@
 
 #include <iostream>
 #include <fstream>
+#include <streambuf>
 #include "tiny-AES-c/aes.hpp"
 
 using namespace std;
 
 
-/**
- * @brief Main function that will run. I will try to group each section up into its own function and use this as high level section.
- * 
- * @param argc argument count
- * @param argv argument values
- * @return int 
- */
+void encryption(string inputName, string outputName){
+    ifstream in(inputName);
+    string inBuf;
+
+    // Allocating the buffersize beforehand is faster than on the fly allocation
+    in.seekg(0, ios::end);
+    inBuf.reserve(in.tellg());
+    in.seekg(0, ios::beg);
+
+    // Filling the buffer
+    inBuf.assign((istreambuf_iterator<char>(in)), istreambuf_iterator<char>());
+
+    
+};
+
+void decryption();
+
 int main(int argc, char* argv[]){
     argc--;
     argv++;
 
     string inputName;
     string outputName;
+    bool encrypt = false;
 
-    string pass;
-
-    // Checking arg counter to see if theres 2 arguments.
-    if (argc != 2){
-        cout << "Correct useage of this program is as follows: encrypto.exe [input file name] [output file name]";
-        return 1;
-    } else if (argc == 2){
+    // Checking arguments
+    if (argc != 3){
+        cerr << "Correct useage of hotdog.exe: hotdog.exe [options] [input file] [output file]" << endl;
+        cerr << left << setw(6) << "-e" << right << "Encryption Mode" << endl;
+        cerr << left << setw(6) << "-d" << right << "Dencryption Mode" << endl;
+        exit(1);
+    } else {
         inputName = argv[0];
         outputName = argv[1];
+        encrypt = (argv[2] == "-e");
     }
 
-    cout << "Welcome to Encrypto.exe!\nPlease enter the encryption password > ";
-    cin >> pass;
-
-    if (pass.length() % 16 != 0){
-            for(int i = 0; i < pass.length() % 16; i++){
-                pass.append("\0");
-            }
+    if (encrypt){
+        encryption(inputName, outputName);
+    } else {
+        decryption();
     }
-
-    cout << " | \n | \n | \nEncrypting...\n";
-
-    ifstream inputFile;
-    inputFile.open(inputFile);
 
     return 0;
 }

@@ -1,2 +1,2 @@
 all:
-	g++ -o encrypto main.cpp
+	g++ -o hotdog main.cpp
